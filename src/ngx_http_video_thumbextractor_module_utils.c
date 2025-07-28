@@ -496,9 +496,12 @@ int setup_filters(ngx_http_video_thumbextractor_thumb_ctx_t *ctx, AVFormatContex
     if (rotate) {
         rotate_value = ngx_atoi((u_char *) rotate->value, ngx_strlen(rotate->value));
     } else {
-        int32_t *displaymatrix = (int32_t *) av_stream_get_side_data(pFormatCtx->streams[videoStream], AV_PKT_DATA_DISPLAYMATRIX, NULL);
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+            int32_t *displaymatrix = (int32_t *) av_stream_get_side_data(pFormatCtx->streams[videoStream], AV_PKT_DATA_DISPLAYMATRIX, NULL);
+        #pragma GCC diagnostic pop
         if (displaymatrix) {
-            rotate_value = -1 * av_display_rotation_get(displaymatrix);
+            rotate_value = -1.0 * av_display_rotation_get(displaymatrix);
         }
     }
 
